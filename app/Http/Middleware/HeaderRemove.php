@@ -2,7 +2,9 @@
 
 namespace App\Http\Middleware;
 
+use Illuminate\Http\Request;
 use Closure;
+use Symfony\Component\HttpFoundation\Response;
 
 class HeaderRemove
 {
@@ -14,9 +16,9 @@ class HeaderRemove
      *
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
-    public function handle($request, Closure $next)
+    public function handle(Request $request, Closure $next)
     {
-        header_remove('Access-Control-Allow-Origin');
+        $request->headers->remove('Access-Control-Allow-Origin');
 
         return $next($request);
     }
