@@ -18,8 +18,9 @@ class HeaderRemove
      */
     public function handle(Request $request, Closure $next)
     {
-        $request->headers->remove('Access-Control-Allow-Origin');
+        //$request->headers->remove('Access-Control-Allow-Origin');
+        //return $next($request);
 
-        return $next($request);
+        return $next($request)->header('Access-Control-Allow-Origin', '*');
     }
 }
