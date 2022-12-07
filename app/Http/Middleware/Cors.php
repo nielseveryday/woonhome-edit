@@ -16,6 +16,7 @@ class Cors
      */
     public function handle(Request $request, Closure $next)
     {
+        /*
         $allowedOrigins = [
             '*'
         ];
@@ -28,6 +29,7 @@ class Cors
                 ->header('Access-Control-Allow-Credentials', 'true')
                 ->header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
         }
+        */
 
         return $next($request);
     }
