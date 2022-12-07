@@ -15,7 +15,7 @@ class EditController extends Controller
      */
     public function __construct()
     {
-        //$this->middleware('auth:api');
+        $this->middleware('auth:api');
     }
 
     /**
@@ -78,11 +78,54 @@ class EditController extends Controller
      * @return \Illuminate\Http\JsonResponse|void
      */
     public function storeProductData(Request $request) {
+        $productArr = [];
+        $colorArr = [];
+
         $products = $request->input('products');
         $colors = $request->input('colors');
         $category = $request->input('category');
 
-        if (count($products) == 0) {
+        if ($product) {
+            $productArr = explode(',', $products);
+        }
+        if ($colors) {
+            $colorArr = explode(',', $colors);
+        }
+
+        if (count($productArr) == 0) {
+            //error, stop
+            return response()->json([
+                'data' => 'error',
+            ], 200);
+        } else {
+            return response()->json([
+                'data' => 'success',
+            ], 200);
+        }
+    }
+
+    /**
+     * Store product data from overview pages
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse|void
+     */
+    public function storeSingleProductData(Request $request) {
+        $productId = 0;
+        $colorArr = [];
+
+        $product = $request->input('products');
+        $colors = $request->input('colors');
+        $category = $request->input('category');
+
+        if ($product) {
+            $productId = (int)$product;
+        }
+        if ($colors) {
+            $colorArr = explode(',', $colors);
+        }
+
+        if ($productId == 0) {
             //error, stop
             return response()->json([
                 'data' => 'error',
