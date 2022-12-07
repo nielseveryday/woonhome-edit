@@ -14,7 +14,7 @@ class EditController extends Controller
      */
     public function __construct()
     {
-        //$this->middleware('auth:api');
+        $this->middleware('auth:api');
     }
 
     /**
@@ -68,5 +68,28 @@ class EditController extends Controller
                 'colors' => $colorResult
             ]
         );
+    }
+
+    /**
+     * Store product data from overview pages
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse|void
+     */
+    public function storeProductData(Request $request) {
+        $products = $request->input('products');
+        $colors = $request->input('colors');
+        $category = $request->input('category');
+
+        if (count($products) == 0) {
+            //error, stop
+            return response()->json([
+                'data' => 'error',
+            ], 200);
+        } else {
+            return response()->json([
+                'data' => 'success',
+            ], 200);
+        }
     }
 }

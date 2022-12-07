@@ -1,8 +1,7 @@
 <?php
 
-//header('Access-Control-Allow-Methods: GET, POST, PATCH, PUT, DELETE, OPTIONS');
+// force set header
 header('Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token, Authorization, Accept,charset,boundary,Content-Length');
-//header('Access-Control-Allow-Origin: *');
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -19,22 +18,6 @@ use App\Http\Controllers\EditController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
-/*Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});*/
-
-/*
-Route::controller(AuthController::class)->group(function(){
-    Route::post('register', 'register');
-    Route::post('login', 'login');
-});
-
-Route::middleware('auth:sanctum')->group(function(){
-    Route::get('/categories', [AttributeController::class, 'getAllCategories']);
-    Route::get('/colors', [AttributeController::class, 'getAllColors']);
-    Route::get('/user', [AuthController::class, 'me']);
-});*/
 
 Route::controller(AuthController::class)->group(function () {
     Route::post('login', 'login');
