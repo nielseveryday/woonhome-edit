@@ -5,6 +5,10 @@
 
     RewriteEngine On
 
+    <IfModule mod_headers.c>
+        Header unset Access-Control-Allow-Origin
+    </IfModule>
+
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
