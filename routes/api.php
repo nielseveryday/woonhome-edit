@@ -28,4 +28,5 @@ Route::controller(AuthController::class)->group(function () {
 
 Route::controller(EditController::class)->group(function () {
     Route::get('categoriescolors', 'allCategoriesAndColors');
+    Route::post('storecategory', 'storeProductData');
 });
