@@ -31,6 +31,8 @@ class Cors
         }
         */
 
-        return $next($request);
+        //return $next($request);
+        return $next($request)
+            ->header('Access-Control-Allow-Origin', '*');
     }
 }
