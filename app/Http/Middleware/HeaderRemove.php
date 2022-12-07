@@ -18,11 +18,11 @@ class HeaderRemove
      */
     public function handle(Request $request, Closure $next)
     {
-        //$request->headers->remove('Access-Control-Allow-Origin');
-        //return $next($request);
+        $request->headers->remove('Access-Control-Allow-Origin');
+        return $next($request);
 
-        return $next($request)->header('Access-Control-Allow-Origin', '*')
+        /*return $next($request)->header('Access-Control-Allow-Origin', '*')
             ->header('Access-Control-Allow-Methods','GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS')
-            ->header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+            ->header('Access-Control-Allow-Headers', 'Content-Type, Authorization');*/
     }
 }
