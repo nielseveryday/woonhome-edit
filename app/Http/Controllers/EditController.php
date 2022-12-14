@@ -86,6 +86,12 @@ class EditController extends Controller
         $colors = $request->input('colors');
         $category = $request->input('category');
 
+        if (empty($products) && (empty($colors) || empty($category))) {
+            return response()->json([
+                'data' => 'Geen gegevens ontvangen.',
+            ], 200);
+        }
+
         if ($products) {
             $productArr = explode(',', $products);
         }
@@ -96,11 +102,13 @@ class EditController extends Controller
         if (count($productArr) == 0) {
             //error, stop
             return response()->json([
-                'data' => 'error',
+                'data' => 'Geen producten ontvangen.',
             ], 200);
         }
 
+
         // perform the update
+        $update = '';
         foreach($productArr as $product) {
             $data = [];
             if ($category) {
@@ -113,10 +121,16 @@ class EditController extends Controller
             $update = DB::table('products2')
                 ->where('id', $product)
                 ->update($data);
+
+            if ($update) {
+                return response()->json([
+                    'data' => count($productArr) . ' producten geupdate.',
+                ], 200);
+            }
         }
 
         return response()->json([
-            'data' => 'success',
+            'data' => 'Fout in query: ' . $update->toSql(),
         ], 200);
     }
 
