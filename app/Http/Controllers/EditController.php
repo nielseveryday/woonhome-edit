@@ -50,11 +50,11 @@ class EditController extends Controller
         }
 
         // Get colors
-        $colors = DB::select('SELECT id, slug, attr_name FROM attributes WHERE attr_type_id = ? AND attr_active = ? ORDER BY attr_name', [1, 1]);
+        $colors = DB::select('SELECT id, attr_slug, attr_name FROM attributes WHERE attr_type_id = ? AND attr_active = ? ORDER BY attr_name', [1, 1]);
         foreach ($colors as $c) {
             $colorResult[] = array(
                 'id' => $c->id,
-                'slug' => 'c_'.$c->slug,
+                'slug' => 'c_'.$c->attr_slug,
                 'name' => $c->attr_name
             );
         }
@@ -92,7 +92,7 @@ class EditController extends Controller
         if ($colors) {
             $colorArr = explode(',', $colors);
         }
-        
+
         if (count($productArr) == 0) {
             //error, stop
             return response()->json([
