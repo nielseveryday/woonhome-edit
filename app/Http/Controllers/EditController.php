@@ -88,6 +88,7 @@ class EditController extends Controller
 
         if (empty($products) && (empty($colors) || empty($category))) {
             return response()->json([
+                'status' => 'error',
                 'data' => 'Geen gegevens ontvangen.',
             ], 200);
         }
@@ -102,6 +103,7 @@ class EditController extends Controller
         if (count($productArr) == 0) {
             //error, stop
             return response()->json([
+                'status' => 'error',
                 'data' => 'Geen producten ontvangen.',
             ], 200);
         }
@@ -124,13 +126,15 @@ class EditController extends Controller
 
             if ($update) {
                 return response()->json([
-                    'data' => count($productArr) . ' producten geupdate.',
+                    'status' => 'success',
+                    'data' => count($productArr) . ' producten geupdate. ' . var_export($data, true),
                 ], 200);
             }
         }
 
         return response()->json([
-            'data' => 'Fout in query: ' . $update->toSql(),
+            'status' => 'error',
+            'data' => 'Fout tijdens update',
         ], 200);
     }
 
