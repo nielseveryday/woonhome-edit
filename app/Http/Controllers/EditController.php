@@ -136,47 +136,18 @@ class EditController extends Controller
                 $query = "UPDATE `products2` SET " . implode(',', $fields) . " WHERE " . $where . " = ? LIMIT 1";
                 $update = DB::update($query, $data);
                 $update++;
+                if ($where == 'permalink_hash') {
+                    // only handle one
+                    break;
+                }
             } catch (\Exception $ex) {
-                $error ++;
+                $error++;
             }
 
             //return
             return response()->json([
                 'status' => 'success',
                 'data' => 'Update afgerond: ' . $update . ' geupdate, ' . $error . ' fout(en).'
-            ], 200);
-        }
-    }
-
-    /**
-     * Store product data from overview pages
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse|void
-     */
-    public function storeSingleProductData(Request $request) {
-        $productId = 0;
-        $colorArr = [];
-
-        $product = $request->input('products');
-        $colors = $request->input('colors');
-        $category = $request->input('category');
-
-        if ($product) {
-            $productId = (int)$product;
-        }
-        if ($colors) {
-            $colorArr = explode(',', $colors);
-        }
-
-        if ($productId == 0) {
-            //error, stop
-            return response()->json([
-                'data' => 'error',
-            ], 200);
-        } else {
-            return response()->json([
-                'data' => 'success',
             ], 200);
         }
     }
