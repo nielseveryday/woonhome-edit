@@ -50,10 +50,11 @@ class EditController extends Controller
         }
 
         // Get colors
-        $colors = DB::select('SELECT id, attr_name FROM attributes WHERE attr_type_id = ? AND attr_active = ? ORDER BY attr_name', [1, 1]);
+        $colors = DB::select('SELECT id, slug, attr_name FROM attributes WHERE attr_type_id = ? AND attr_active = ? ORDER BY attr_name', [1, 1]);
         foreach ($colors as $c) {
             $colorResult[] = array(
                 'id' => $c->id,
+                'slug' => 'c_'.$c->slug,
                 'name' => $c->attr_name
             );
         }
@@ -85,23 +86,38 @@ class EditController extends Controller
         $colors = $request->input('colors');
         $category = $request->input('category');
 
-        if ($product) {
+        if ($products) {
             $productArr = explode(',', $products);
         }
         if ($colors) {
             $colorArr = explode(',', $colors);
         }
-
+        
         if (count($productArr) == 0) {
             //error, stop
             return response()->json([
                 'data' => 'error',
             ], 200);
-        } else {
-            return response()->json([
-                'data' => 'success',
-            ], 200);
         }
+
+        // perform the update
+        foreach($productArr as $product) {
+            $data = [];
+            if ($category) {
+                $data[] = ['category_id' => (int)$category];
+            }
+            foreach($colorArr as $color) {
+                $data[] = [$color => 1];
+            }
+
+            $update = DB::table('products2')
+                ->where('id', $product)
+                ->update($data);
+        }
+
+        return response()->json([
+            'data' => 'success',
+        ], 200);
     }
 
     /**
