@@ -110,7 +110,6 @@ class EditController extends Controller
 
 
         // perform the update
-        $update = '';
         foreach($productArr as $product) {
             $data = [];
             if ($category) {
@@ -130,12 +129,12 @@ class EditController extends Controller
                     'data' => count($productArr) . ' producten geupdate. ' . var_export($data, true),
                 ], 200);
             }
-        }
 
-        return response()->json([
-            'status' => 'error',
-            'data' => 'Fout tijdens update',
-        ], 200);
+            return response()->json([
+                'status' => 'error',
+                'data' => 'Fout tijdens update: '. var_export($data, true),
+            ],200);
+        }
     }
 
     /**
