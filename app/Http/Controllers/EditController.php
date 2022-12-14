@@ -128,7 +128,7 @@ class EditController extends Controller
                 ->where('id', $product)
                 ->update($data);*/
 
-            $update = DB::update('UPDATE products2 SET '.implode(', ', $fields).' WHERE id = ?', [$data]);
+            $update = DB::update('UPDATE products2 SET '.implode(', ', $fields).' WHERE id = ?', $data);
 
             if ($update) {
                 return response()->json([
