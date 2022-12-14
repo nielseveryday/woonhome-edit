@@ -139,7 +139,7 @@ class EditController extends Controller
 
             return response()->json([
                 'status' => 'error',
-                'data' => 'Fout tijdens update: '. var_export($data, true) . ', ' . var_export($fields, true)
+                'data' => 'Fout tijdens update. UPDATE products2 SET '.implode(', ', $fields).' WHERE id = ?)' . ', ' . implode(',', $data)
             ],200);
         }
     }
