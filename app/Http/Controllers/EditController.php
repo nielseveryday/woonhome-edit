@@ -133,7 +133,7 @@ class EditController extends Controller
             if ($update) {
                 return response()->json([
                     'status' => 'success',
-                    'data' => count($productArr) . ' producten geupdate. ' . var_export($data, true) . ', ' . var_export($fields, true)
+                    'data' => count($productArr) . ' producten geupdate. UPDATE products2 SET '.implode(', ', $fields).' WHERE id = ?)' . ', ' . implode(',', $data)
                 ], 200);
             }
 
