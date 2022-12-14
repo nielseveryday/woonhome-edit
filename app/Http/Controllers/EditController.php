@@ -108,9 +108,18 @@ class EditController extends Controller
             ], 200);
         }
 
-
         // perform the update
+        $update = 0;
+        $error = 0;
+        $where = 'id';
         foreach($productArr as $product) {
+            //update by id (single or more products) or by slug (single product)
+            $product_ref = $product;
+            if (!is_int($product_ref)) {
+                $product_ref = abs(crc32($product));
+                $where = 'permalink_hash';
+            }
+
             $fields = [];
             $data = [];
             if ($category) {
@@ -121,37 +130,21 @@ class EditController extends Controller
                 $fields[] = '`'.$color.'` = ?';
                 $data[] = 1;
             }
-
-            $data[] = $product;
+            $data[] = $product_ref;
 
             try {
-                $query = "UPDATE `products2` SET " . implode(',', $fields) . " WHERE id = ?";
+                $query = "UPDATE `products2` SET " . implode(',', $fields) . " WHERE " . $where . " = ? LIMIT 1";
                 $update = DB::update($query, $data);
-
-                return response()->json([
-                    'status' => 'success',
-                    'data' => count($productArr) . ' producten geupdate. ' . $query . ', ' . implode(',', $data)
-                ], 200);
-
-            }  catch (\Exception $ex) {
-                $error = $ex->getCode() . ': ' . $ex->getMessage();
-                return response()->json([
-                    'status' => 'error',
-                    'data' => 'Fout tijdens update. ' . $error
-                ], 200);
+                $update++;
+            } catch (\Exception $ex) {
+                $error ++;
             }
 
-            /*if ($update) {
-                return response()->json([
-                    'status' => 'success',
-                    'data' => count($productArr) . ' producten geupdate. ' . $query . ', ' . implode(',', $data)
-                ], 200);
-            }
-
+            //return
             return response()->json([
-                'status' => 'error',
-                'data' => 'Fout tijdens update. ' . $query . ', ' . implode(',', $data)
-            ], 200);*/
+                'status' => 'success',
+                'data' => 'Update afgerond: ' . $update . ' geupdate, ' . $error . ' fout(en).'
+            ], 200);
         }
     }
 
