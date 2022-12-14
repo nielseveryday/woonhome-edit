@@ -124,13 +124,24 @@ class EditController extends Controller
 
             $data[] = $product;
 
-            /*$update = DB::table('products2')
-                ->where('id', $product)
-                ->update($data);*/
-            $query = "UPDATE `products2` SET " . implode(',', $fields) . " WHERE id = ?";
-            $update = DB::update($query, $data);
+            try {
+                $query = "UPDATE `products2` SET " . implode(',', $fields) . " WHERE id = ?";
+                $update = DB::update($query, $data);
 
-            if ($update) {
+                return response()->json([
+                    'status' => 'success',
+                    'data' => count($productArr) . ' producten geupdate. ' . $query . ', ' . implode(',', $data)
+                ], 200);
+
+            }  catch (\Exception $ex) {
+                $error = $ex->getCode() . ': ' . $ex->getMessage();
+                return response()->json([
+                    'status' => 'error',
+                    'data' => 'Fout tijdens update. ' . $error
+                ], 200);
+            }
+
+            /*if ($update) {
                 return response()->json([
                     'status' => 'success',
                     'data' => count($productArr) . ' producten geupdate. ' . $query . ', ' . implode(',', $data)
@@ -140,7 +151,7 @@ class EditController extends Controller
             return response()->json([
                 'status' => 'error',
                 'data' => 'Fout tijdens update. ' . $query . ', ' . implode(',', $data)
-            ],200);
+            ], 200);*/
         }
     }
 
