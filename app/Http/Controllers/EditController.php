@@ -111,28 +111,35 @@ class EditController extends Controller
 
         // perform the update
         foreach($productArr as $product) {
+            $fields = [];
             $data = [];
             if ($category) {
-                $data['category_id'] = (int)$category;
+                $fields[] = 'category_id = ?';
+                $data[] = (int)$category;
             }
             foreach($colorArr as $color) {
-                $data[$color] = 1;
+                $fields[] = $color.' = ?';
+                $data[] = 1;
             }
 
-            $update = DB::table('products2')
+            $data[] = $product;
+
+            /*$update = DB::table('products2')
                 ->where('id', $product)
-                ->update($data);
+                ->update($data);*/
+
+            $update = DB::update('UPDATE products2 SET '.implode(', ', $fields).' WHERE id = ?', [$data]);
 
             if ($update) {
                 return response()->json([
                     'status' => 'success',
-                    'data' => count($productArr) . ' producten geupdate. ' . var_export($data, true),
+                    'data' => count($productArr) . ' producten geupdate. ' . var_export($data, true) . ', ' . var_export($fields, true)
                 ], 200);
             }
 
             return response()->json([
                 'status' => 'error',
-                'data' => 'Fout tijdens update: '. var_export($data, true),
+                'data' => 'Fout tijdens update: '. var_export($data, true) . ', ' . var_export($fields, true)
             ],200);
         }
     }
