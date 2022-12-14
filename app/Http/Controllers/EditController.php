@@ -114,11 +114,11 @@ class EditController extends Controller
             $fields = [];
             $data = [];
             if ($category) {
-                $fields[] = 'category_id = ?';
+                $fields[] = '`category_id` = ?';
                 $data[] = (int)$category;
             }
             foreach($colorArr as $color) {
-                $fields[] = $color.' = ?';
+                $fields[] = '`'.$color.'` = ?';
                 $data[] = 1;
             }
 
@@ -128,18 +128,18 @@ class EditController extends Controller
                 ->where('id', $product)
                 ->update($data);*/
 
-            $update = DB::update('UPDATE products2 SET '.implode(', ', $fields).' WHERE id = ?', $data);
+            $update = DB::update("UPDATE `products2` SET ".implode(', ', $fields)." WHERE id = ?", $data);
 
             if ($update) {
                 return response()->json([
                     'status' => 'success',
-                    'data' => count($productArr) . ' producten geupdate. UPDATE products2 SET '.implode(', ', $fields).' WHERE id = ?)' . ', ' . implode(',', $data)
+                    'data' => count($productArr) . ' producten geupdate. UPDATE `products2` SET '.implode(', ', $fields).' WHERE `id` = ?)' . ', ' . implode(',', $data)
                 ], 200);
             }
 
             return response()->json([
                 'status' => 'error',
-                'data' => 'Fout tijdens update. UPDATE products2 SET '.implode(', ', $fields).' WHERE id = ?)' . ', ' . implode(',', $data)
+                'data' => 'Fout tijdens update. UPDATE `products2` SET '.implode(', ', $fields).' WHERE `id` = ?)' . ', ' . implode(',', $data)
             ],200);
         }
     }
