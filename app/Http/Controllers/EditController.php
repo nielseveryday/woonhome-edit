@@ -104,10 +104,10 @@ class EditController extends Controller
         foreach($productArr as $product) {
             $data = [];
             if ($category) {
-                $data[] = ['category_id' => (int)$category];
+                $data['category_id'] = (int)$category;
             }
             foreach($colorArr as $color) {
-                $data[] = [$color => 1];
+                $data[$color] = 1;
             }
 
             $update = DB::table('products2')
