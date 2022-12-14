@@ -127,19 +127,19 @@ class EditController extends Controller
             /*$update = DB::table('products2')
                 ->where('id', $product)
                 ->update($data);*/
-
-            $update = DB::update("UPDATE `products2` SET ".implode(', ', $fields)." WHERE id = ?", $data);
+            $query = "UPDATE `products2` SET " . implode(',', $fields) . " WHERE id = ?";
+            $update = DB::update($query, $data);
 
             if ($update) {
                 return response()->json([
                     'status' => 'success',
-                    'data' => count($productArr) . ' producten geupdate. UPDATE `products2` SET '.implode(', ', $fields).' WHERE `id` = ?)' . ', ' . implode(',', $data)
+                    'data' => count($productArr) . ' producten geupdate. ' . $query . ', ' . implode(',', $data)
                 ], 200);
             }
 
             return response()->json([
                 'status' => 'error',
-                'data' => 'Fout tijdens update. UPDATE `products2` SET '.implode(', ', $fields).' WHERE `id` = ?)' . ', ' . implode(',', $data)
+                'data' => 'Fout tijdens update. ' . $query . ', ' . implode(',', $data)
             ],200);
         }
     }
