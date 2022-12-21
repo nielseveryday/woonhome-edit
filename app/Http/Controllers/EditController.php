@@ -112,6 +112,7 @@ class EditController extends Controller
         $update = 0;
         $error = 0;
         $where = 'id';
+        $errors = [];
         foreach($productArr as $product) {
             //update by id (single or more products) or by slug (single product)
             $product_ref = $product;
@@ -141,14 +142,16 @@ class EditController extends Controller
                     break;
                 }
             } catch (\Exception $ex) {
+                $errors[] = $ex->getMessage();
                 $error++;
             }
-
-            //return
-            return response()->json([
-                'status' => 'success',
-                'data' => 'Update afgerond: ' . $update . ' geupdate, ' . $error . ' fout(en).'
-            ], 200);
         }
+        
+        //return
+        return response()->json([
+            'status' => 'success',
+            'data' => 'Update afgerond: ' . $update . ' geupdate, ' . $error . ' fout(en). '
+                . implode(', ', $errors)
+        ], 200);
     }
 }
