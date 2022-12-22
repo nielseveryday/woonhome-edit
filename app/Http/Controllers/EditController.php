@@ -114,6 +114,7 @@ class EditController extends Controller
         $where = 'id';
         $errors = [];
         $queries = [];
+        $datas = [];
         foreach($productArr as $product) {
             //update by id (single or more products) or by slug (single product)
             $product_ref = $product;
@@ -137,6 +138,7 @@ class EditController extends Controller
             try {
                 $query = "UPDATE `products2` SET " . implode(',', $fields) . " WHERE " . $where . " = ? LIMIT 1";
                 $queries[] = $query;
+                $datas[] = $data;
                 $update = DB::update($query, $data);
                 $update++;
                 if ($where == 'permalink_hash') {
@@ -154,7 +156,8 @@ class EditController extends Controller
             'status' => 'success',
             'data' => 'Update afgerond: ' . $update . ' geupdate, ' . $error . ' fout(en). E| '
                 . implode(', ', $errors) . ' Q| '
-                . implode(', ', $queries)
+                . implode(', ', $queries) . ' D| '
+                . implode(', ', $datas)
         ], 200);
     }
 }
