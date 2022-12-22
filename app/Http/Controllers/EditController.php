@@ -138,8 +138,8 @@ class EditController extends Controller
             try {
                 $query = "UPDATE `products2` SET " . implode(',', $fields) . " WHERE " . $where . " = ? LIMIT 1";
                 $queries[] = $query;
-                $datas[] = $data;
                 $update = DB::update($query, $data);
+                $datas[] = var_export($data, true);
                 $update++;
                 if ($where == 'permalink_hash') {
                     // only handle one
