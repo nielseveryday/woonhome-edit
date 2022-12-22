@@ -118,10 +118,10 @@ class EditController extends Controller
         foreach($productArr as $product) {
             //update by id (single or more products) or by slug (single product)
             $product_ref = $product;
-            if (!is_int($product_ref)) {
-                $product_ref = abs(crc32($product));
+            /*if (!is_int($product_ref)) {
+                //$product_ref = abs(crc32($product));
                 $where = 'permalink_hash';
-            }
+            }*/
 
             $fields = [];
             $data = [];
@@ -133,7 +133,7 @@ class EditController extends Controller
                 $fields[] = '`'.$color.'` = ?';
                 $data[] = 1;
             }
-            $data[] = $product_ref;
+            $data[] = $product;
 
             try {
                 $query = "UPDATE `products2` SET " . implode(',', $fields) . " WHERE " . $where . " = ? LIMIT 1";
@@ -141,10 +141,10 @@ class EditController extends Controller
                 $update = DB::update($query, $data);
                 $datas[] = var_export($data, true);
                 $update++;
-                if ($where == 'permalink_hash') {
+                /*if ($where == 'permalink_hash') {
                     // only handle one
                     break;
-                }
+                }*/
             } catch (\Exception $ex) {
                 $errors[] = $ex->getMessage();
                 $error++;
