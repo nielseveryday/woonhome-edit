@@ -85,6 +85,7 @@ class EditController extends Controller
         $products = $request->input('products');
         $colors = $request->input('colors');
         $category = $request->input('category');
+        $method = $request->input('method') ?? 'product';
 
         if (empty($products) && (empty($colors) || empty($category))) {
             return response()->json([
@@ -113,15 +114,17 @@ class EditController extends Controller
         $error = 0;
         $where = 'id';
         $errors = [];
-        $queries = [];
-        $datas = [];
         foreach($productArr as $product) {
             //update by id (single or more products) or by slug (single product)
-            $product_ref = $product;
-            /*if (!is_int($product_ref)) {
+            /*$product_ref = $product;
+            if (!is_int($product_ref)) {
                 //$product_ref = abs(crc32($product));
                 $where = 'permalink_hash';
             }*/
+            if ($method == 'product') {
+                $product = abs(crc32($product));
+                $where = 'permalink_hash';
+            }
 
             $fields = [];
             $data = [];
@@ -137,14 +140,12 @@ class EditController extends Controller
 
             try {
                 $query = "UPDATE `products2` SET " . implode(',', $fields) . " WHERE " . $where . " = ? LIMIT 1";
-                $queries[] = $query;
                 $update = DB::update($query, $data);
-                $datas[] = var_export($data, true);
                 $update++;
-                /*if ($where == 'permalink_hash') {
+                if ($where == 'permalink_hash') {
                     // only handle one
                     break;
-                }*/
+                }
             } catch (\Exception $ex) {
                 $errors[] = $ex->getMessage();
                 $error++;
@@ -154,10 +155,8 @@ class EditController extends Controller
         //return
         return response()->json([
             'status' => 'success',
-            'data' => 'Update afgerond: ' . $update . ' geupdate, ' . $error . ' fout(en). E| '
-                . implode(', ', $errors) . ' Q| '
-                . implode(', ', $queries) . ' D| '
-                . implode(', ', $datas)
+            'data' => 'Update >>' . $method . '<< afgerond: ' . $update . ' geupdate, ' . $error . ' fout(en). ('
+                . implode(', ', $errors) . ')'
         ], 200);
     }
 }
