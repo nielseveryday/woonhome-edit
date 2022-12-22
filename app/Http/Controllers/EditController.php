@@ -116,11 +116,6 @@ class EditController extends Controller
         $errors = [];
         foreach($productArr as $product) {
             //update by id (single or more products) or by slug (single product)
-            /*$product_ref = $product;
-            if (!is_int($product_ref)) {
-                //$product_ref = abs(crc32($product));
-                $where = 'permalink_hash';
-            }*/
             if ($method == 'product') {
                 $product = abs(crc32($product));
                 $where = 'permalink_hash';
@@ -140,7 +135,7 @@ class EditController extends Controller
 
             try {
                 $query = "UPDATE `products2` SET " . implode(',', $fields) . " WHERE " . $where . " = ? LIMIT 1";
-                $update = DB::update($query, $data);
+                $updateQuery = DB::update($query, $data);
                 $update++;
                 if ($where == 'permalink_hash') {
                     // only handle one
