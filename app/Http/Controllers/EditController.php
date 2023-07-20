@@ -127,9 +127,11 @@ class EditController extends Controller
                 $fields[] = '`category_id` = ?';
                 $data[] = (int)$category;
             }
-            foreach($colorArr as $color) {
-                $fields[] = '`'.$color.'` = ?';
-                $data[] = 1;
+            if (count($colorArr) > 0) {
+                foreach ($colorArr as $color) {
+                    $fields[] = '`' . $color . '` = ?';
+                    $data[] = 1;
+                }
             }
             $data[] = $product;
 
