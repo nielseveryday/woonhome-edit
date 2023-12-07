@@ -54,7 +54,7 @@ class EditController extends Controller
         foreach ($colors as $c) {
             $colorResult[] = array(
                 'id' => $c->id,
-                'slug' => 'c_'.$c->attr_slug,
+                'slug' => 'c_' . $c->attr_slug,
                 'name' => $c->attr_name
             );
         }
@@ -78,7 +78,8 @@ class EditController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse|void
      */
-    public function storeProductData(Request $request) {
+    public function storeProductData(Request $request)
+    {
         $productArr = [];
         $colorArr = [];
 
@@ -99,6 +100,9 @@ class EditController extends Controller
         }
         if ($colors) {
             $colorArr = explode(',', $colors);
+            if (count($colorArr) > 0) {
+                $this->resetColors($productArr);
+            }
         }
 
         if (count($productArr) == 0) {
@@ -114,7 +118,7 @@ class EditController extends Controller
         $error = 0;
         $where = 'id';
         $errors = [];
-        foreach($productArr as $product) {
+        foreach ($productArr as $product) {
             //update by id (single or more products) or by slug (single product)
             if ($method == 'product') {
                 $product = abs(crc32($product));
@@ -155,5 +159,37 @@ class EditController extends Controller
             'data' => 'Update >>' . $method . '<< afgerond: ' . $update . ' geupdate, ' . $error . ' fout(en). ('
                 . implode(', ', $errors) . ')'
         ], 200);
+    }
+
+    /**
+     * Set all colors to 0 before updating colors
+     *
+     * @param array $productIds
+     * @return int
+     */
+    private function resetColors(array $productIds)
+    {
+        if (count($productIds) > 0) {
+            $query = "UPDATE `products2` SET
+                `c_blauw` = 0,
+                `c_brons-koper` = 0,
+                `c_bruin-beige` = 0,
+                `c_diverse-kleuren` = 0,
+                `c_geel` = 0,
+                `c_goud` = 0,
+                `c_grijs` = 0,
+                `c_groen` = 0,
+                `c_oranje` = 0,
+                `c_paars-lila` = 0,
+                `c_rood` = 0,
+                `c_roze` = 0,
+                `c_transparant` = 0,
+                `c_wit` = 0,
+                `c_zilver` = 0,
+                `c_zwart` = 0
+            WHERE id IN (" . implode(',', $productIds) . ")";
+
+            $result = DB::update($query);
+        }
     }
 }
