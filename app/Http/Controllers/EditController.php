@@ -170,6 +170,13 @@ class EditController extends Controller
     private function resetColors(array $productIds)
     {
         if (count($productIds) > 0) {
+
+            $where = " id IN (" . implode(',', $productIds) . ")";
+            if (!is_numeric($productIds[0])) {
+                $hash = abs(crc32($productIds[0]));
+                $where = " permalink_hash = '" . $hash . "'";
+            }
+
             $query = "UPDATE `products2` SET
                 `c_blauw` = 0,
                 `c_brons-koper` = 0,
@@ -187,7 +194,7 @@ class EditController extends Controller
                 `c_wit` = 0,
                 `c_zilver` = 0,
                 `c_zwart` = 0
-            WHERE id IN (" . implode(',', $productIds) . ")";
+            WHERE " . $where;
 
             $result = DB::update($query);
         }
